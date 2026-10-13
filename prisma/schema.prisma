@@ -1,0 +1,26 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Scan {
+  id            String    @id @default(uuid())
+  url           String
+  scanned_at    DateTime  @default(now())
+  lh_score_perf Int
+  lh_raw_json   Json
+  crux_json     Json?
+  ai_report     AiReport?
+}
+
+model AiReport {
+  id           String @id @default(uuid())
+  scan_id      String @unique
+  scan         Scan   @relation(fields: [scan_id], references: [id])
+  summary_text String
+  fixes_json   Json
+}
